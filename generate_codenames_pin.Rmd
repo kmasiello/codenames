@@ -1,0 +1,31 @@
+---
+title: "generate_pin"
+author: "Katie Masiello"
+date: "3/29/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(pins)
+library(dplyr)
+library(ids)
+```
+
+First pull in usernames
+```{r}
+board <- board_rsconnect()
+users <- board %>% pin_read("katie.masiello/user-info")
+
+# create codename table
+set.seed(as.numeric(Sys.Date()))
+codenames <- users %>% select(username) %>% mutate(codname = adjective_animal(n=nrow(users),max_len = 9))
+
+#pin it
+board %>% pin_write(codenames)
+
+```
+
